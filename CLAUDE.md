@@ -5,7 +5,9 @@ Tracker rolek Empatify na YouTube, Instagram, Facebook i TikTok. Codzienny snaps
 
 ## Live
 - **Produkcja**: https://empatify-social-checker.vercel.app
+- **GitHub**: https://github.com/chmiel-aga/empatify-social-checker (public, portfolio-ready)
 - **Linked Vercel project**: `chmielagn-4118s-projects/empatify-social-checker`
+- **Auto-deploy**: GitHub `main` → Vercel production (no more manual `vercel deploy`)
 - **DB**: Neon Postgres (free tier), connection w `DATABASE_URL`
 - **Cron**: codziennie `30 19 * * *` UTC = 21:30 PL (lato) / 20:30 PL (zima). Hobby plan = 1 cron/day.
 
