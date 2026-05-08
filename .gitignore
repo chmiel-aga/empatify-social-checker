@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env*.local
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.claude/
+*.log
+.npm-cache/
+
+# Drizzle migration files SHOULD be committed (they version the schema).
+# Uncomment if you ever want to ignore them:
+# drizzle/
