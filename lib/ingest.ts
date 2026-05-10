@@ -42,6 +42,10 @@ export async function syncPlatform(
     let postId: string;
     if (existing) {
       postId = existing.id;
+      // IMPORTANT: do NOT update lastFetchedAt here. That field tracks
+      // "last time a snapshot was captured" and is used by getPostsNeedingCapture.
+      // If discovery refreshed it, the snapshot phase would skip every post
+      // returned by listRecentPosts (the most recent 25), defeating the cron.
       await db
         .update(posts)
         .set({
@@ -50,12 +54,14 @@ export async function syncPlatform(
           thumbnailUrl: p.thumbnailUrl ?? existing.thumbnailUrl,
           durationSeconds: p.durationSeconds ?? existing.durationSeconds,
           contentKey: existing.contentKey ?? contentKey,
-          lastFetchedAt: new Date(),
           raw: p.raw ?? existing.raw,
         })
         .where(eq(posts.id, postId));
       updated++;
     } else {
+      // New post: lastFetchedAt stays null. getPostsNeedingCapture treats null
+      // as "needs capture", so the snapshot phase will pick it up immediately
+      // (or, if captureInitial=true, the loop below sets it explicitly).
       const [inserted] = await db
         .insert(posts)
         .values({
@@ -69,7 +75,6 @@ export async function syncPlatform(
           durationSeconds: p.durationSeconds ?? null,
           contentKey,
           raw: p.raw,
-          lastFetchedAt: new Date(),
         })
         .returning({ id: posts.id });
       postId = inserted.id;
